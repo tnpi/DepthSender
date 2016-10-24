@@ -8,6 +8,8 @@
 #define HAS_LIBCXX
 #import <Structure/Structure.h>
 
+#import "VVOSC.h"
+
 @interface ViewController : UIViewController <STSensorControllerDelegate>
 
 @end

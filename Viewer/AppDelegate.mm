@@ -51,7 +51,8 @@ void preventApplicationFromStartingInTheBackgroundWhenTheStructureSensorIsPlugge
         // See SDK documentation for how to start a listener on your computer.
 
         NSError* error = nil;
-        NSString *remoteLogHost = @"192.168.1.1";
+        //NSString *remoteLogHost = @"192.168.1.1";
+        NSString *remoteLogHost = @"192.168.1.25";
         [STWirelessLog broadcastLogsToWirelessConsoleAtAddress:remoteLogHost usingPort:4999 error:&error];
         if (error)
             NSLog(@"Oh no! Can't start wireless log: %@", [error localizedDescription]);

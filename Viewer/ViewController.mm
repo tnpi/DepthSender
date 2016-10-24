@@ -163,6 +163,13 @@ struct AppStatus
     UILabel* _statusLabel;
     
     AppStatus _appStatus;
+    
+    // tanaka add
+    OSCManager *oscManager;
+    OSCInPort *inOscPort;
+    OSCOutPort *outOscPort;
+    int frameCount;
+
 }
 
 - (BOOL)connectAndStartStreaming;
@@ -221,6 +228,24 @@ struct AppStatus
     [self.view addSubview:_colorImageView];
 
     [self setupColorCamera];
+    
+    // tanaka add
+
+    frameCount = 0;
+    
+    oscManager = [[OSCManager alloc] init];
+    oscManager.delegate = self;
+    
+    //出力ポートを作って送信。
+    outOscPort = [oscManager createNewOutputToAddress:@"192.168.179.3" atPort:10001];
+    
+    OSCMessage *message = [OSCMessage createWithAddress:@"/test"];
+    [message addInt:256];
+    [outOscPort sendThisPacket:[OSCPacket createWithContent:message]];
+    
+    //入力ポートは作るだけ。
+    inOscPort = [oscManager createNewInputForPort:10002];
+
 }
 
 - (void)dealloc
@@ -522,6 +547,14 @@ struct AppStatus
     [self renderDepthFrame:depthFrame];
     [self renderNormalsFrame:depthFrame];
     [self renderColorFrame:colorFrame.sampleBuffer];
+    
+    // ここにデータ送信処理を追加
+    
+    OSCMessage *message = [OSCMessage createWithAddress:@"/test"];
+    [message addInt:frameCount];
+    [outOscPort sendThisPacket:[OSCPacket createWithContent:message]];
+   
+    frameCount++;
 }
 
 //------------------------------------------------------------------------------
